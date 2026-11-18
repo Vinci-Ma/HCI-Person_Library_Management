@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MyLibrary – Personal Library Dashboard</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#faf7f2;--card:#fff;--ink:#14213d;--mut:#586178;--g:#2f7656;--gs:#e3f1e9;--b:#3d5f94;--bs:#e5ecf6;--line:#e6dfd2;--bad:#b42318;--amb:#8a5200;--sh:0 1px 2px rgba(20,33,61,.06),0 6px 18px rgba(20,33,61,.05);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Manrope,system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.2;margin:0 0 .5rem}h1{font-size:1.35rem;margin:0}h2{font-size:1.2rem}h3{font-size:1.02rem}
+:focus-visible{outline:3px solid var(--b);outline-offset:2px}
+.skip{position:absolute;left:-999px;background:var(--g);color:#fff;padding:.6rem 1rem;z-index:80}.skip:focus{left:0}
+i[data-lucide],svg.lucide{width:20px;height:20px;flex:none}
+.app{display:flex;min-height:100vh}
+#sb{width:248px;flex:none;background:var(--card);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;padding:1rem .7rem;display:flex;flex-direction:column;gap:1rem;transition:width .2s;overflow-y:auto}
+.brand{display:flex;gap:.6rem;align-items:center;font:700 1.2rem Fraunces,Georgia,serif;padding:.2rem .6rem;color:var(--g)}
+#nav{display:flex;flex-direction:column;gap:.2rem}
+#nav a{display:flex;gap:.75rem;align-items:center;padding:.6rem .75rem;border-radius:12px;text-decoration:none;color:var(--ink);min-height:44px;font-weight:600}
+#nav a:hover{background:var(--gs)}#nav a[aria-current="page"]{background:var(--g);color:#fff}
+.nb{margin-left:auto;background:var(--bad);color:#fff;border-radius:99px;font-size:.75rem;padding:0 .45rem;min-width:20px;text-align:center}
+body.col #sb{width:76px}body.col .lbl,body.col .brand span{display:none}body.col .nb{display:none}
+.mw{flex:1;min-width:0}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:15;background:rgba(250,247,242,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);display:flex;gap:.7rem;align-items:center;padding:.55rem 1.1rem}
+.ib{font:inherit;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;position:relative}.ib:hover{background:var(--gs)}
+.sr{flex:1;max-width:380px;margin-left:auto;position:relative}.sr input{padding-left:2.4rem}.sr i{position:absolute;left:.7rem;top:12px;color:var(--mut)}
+.badge{position:absolute;top:-4px;right:-4px;background:var(--bad);color:#fff;border-radius:99px;font-size:.72rem;min-width:20px;padding:0 .3rem}
+#prof{display:flex;gap:.5rem;align-items:center;text-decoration:none;color:var(--ink);font-weight:600;padding:.2rem;border-radius:12px;min-height:44px}
+.av{width:36px;height:36px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+main{padding:1.25rem 1.1rem 3rem;max-width:1200px;margin:auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1.1rem;box-shadow:var(--sh)}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1rem;margin-bottom:1rem}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-bottom:1rem}
+.kpi{display:flex;gap:.8rem;align-items:center}.kpi .ico{width:42px;height:42px;border-radius:12px;background:var(--gs);color:var(--g);display:flex;align-items:center;justify-content:center;flex:none}
+.kpi b{display:block;font:700 1.6rem/1.1 Fraunces,Georgia,serif}.kpi span,.hint{color:var(--mut);font-size:.9rem}
+.btn{font:inherit;min-height:44px;padding:.4rem 1.05rem;border-radius:12px;border:2px solid var(--g);background:var(--g);color:#fff;cursor:pointer;font-weight:600;text-decoration:none;display:inline-flex;gap:.45rem;align-items:center}
+.btn:hover{filter:brightness(1.1)}.btn.g{background:transparent;color:var(--g)}.btn.g:hover{background:var(--gs)}.btn.d{background:var(--bad);border-color:var(--bad)}.btn.dg{background:transparent;color:var(--bad);border-color:var(--bad)}.btn.s{min-height:38px;padding:.15rem .8rem;font-size:.92rem}
+label{font-weight:600;font-size:.9rem;display:block;margin-bottom:.2rem}
+input,select,textarea{font:inherit;color:var(--ink);background:#fff;border:2px solid var(--line);border-radius:12px;min-height:44px;padding:.35rem .7rem;width:100%}
+input:hover,select:hover,textarea:hover{border-color:var(--b)}[aria-invalid="true"]{border-color:var(--bad)}
+.err{color:var(--bad);font-size:.88rem;min-height:1.1em}
+.tools{display:flex;flex-wrap:wrap;gap:.7rem;align-items:flex-end;margin-bottom:.6rem}.tools>div{flex:1 1 150px}.tools .w{flex:2 1 220px}
+.st{font-weight:600;margin:.2rem 0 .7rem}
+.books{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}.book{overflow:hidden}.book p{margin:.15rem 0}.row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.6rem}.book .row{clear:both}
+.cover{float:left;width:84px;height:126px;object-fit:cover;border-radius:8px;border:1px solid var(--line);margin:0 .8rem .4rem 0}.cover.sm{width:44px;height:66px}
+.cover.ph{display:flex;align-items:center;justify-content:center;background:var(--bs);color:var(--b);font:700 2rem Fraunces,Georgia,serif}.cover.sm.ph{font-size:1.2rem}
+.bdg{display:inline-flex;gap:.3rem;align-items:center;border-radius:99px;padding:.05rem .65rem .05rem .45rem;font-size:.84rem;font-weight:700;border:1px solid transparent}.bdg i{width:15px!important;height:15px!important}
+.s0{background:var(--bs);color:#2c4a7c}.s1{background:#fdf0d5;color:var(--amb)}.s2{background:var(--gs);color:#1f5a40}.s3{background:#fde7e4;color:#8f1d12}.s4{background:#ececf0;color:#43475a}
+.tg{display:inline-block;border:1px dashed var(--mut);border-radius:6px;font-size:.75rem;padding:0 .4rem;color:var(--mut)}
+.pb{height:12px;background:#ece6da;border-radius:7px;overflow:hidden;margin:.4rem 0 .1rem}.pb i{display:block;height:100%;background:var(--g);border-radius:7px}
+.stars{color:#a86a00;letter-spacing:2px}
+.up{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}.up input{width:100px;min-height:38px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:680px}th,td{padding:.55rem .65rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}th{font-size:.88rem;color:var(--mut)}td .cover{margin:0 .6rem 0 0}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}.seg button{font:inherit;border:0;background:none;padding:.4rem .9rem;min-height:40px;cursor:pointer;font-weight:600;color:var(--ink)}.seg button[aria-pressed="true"]{background:var(--g);color:#fff}
+.alert{border-left:6px solid var(--amb);background:#fff8e8;padding:.7rem 1rem;border-radius:12px;margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center}
+.rev{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.6rem;margin:.6rem 0}
+.rb{display:grid;grid-template-columns:150px 1fr 28px;gap:.5rem;align-items:center;margin:.35rem 0}.rb i{display:block;height:16px;background:var(--b);border-radius:5px;min-width:4px}
+.it{display:flex;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--line);align-items:flex-start}.it:last-child{border:0}
+.empty{text-align:center;color:var(--mut);padding:1.5rem 1rem}
+#map{height:min(62vh,480px);min-height:300px;border:1px solid var(--line);border-radius:12px;background:var(--bs)}
+.jvm-container{position:relative;overflow:hidden;height:100%;width:100%;touch-action:none}.jvm-container svg{display:block}
+.jvm-tooltip{position:absolute;display:none;background:var(--ink);color:#fff;padding:4px 8px;border-radius:6px;font-size:.9rem;white-space:nowrap;z-index:5}
+.jvm-zoom-btn{position:absolute;left:10px;width:40px;height:40px;background:var(--g);color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;cursor:pointer;user-select:none}.jvm-zoomin{top:10px}.jvm-zoomout{top:58px}
+.lg{display:flex;flex-wrap:wrap;gap:.3rem 1rem;font-size:.9rem;margin:.5rem 0}.sw{display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:.35rem;vertical-align:-2px;border:1px solid var(--mut)}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(1rem + env(safe-area-inset-bottom,0px));z-index:90;display:flex;flex-direction:column;gap:.5rem;width:min(92vw,480px)}
+.t{background:var(--ink);color:#fff;padding:.7rem 1rem;border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:1rem}.t button{background:none;border:0;color:#fff;text-decoration:underline;font:inherit;font-weight:700;cursor:pointer;min-height:36px}
+dialog{border:1px solid var(--line);border-radius:18px;background:#fff;color:var(--ink);width:min(94vw,640px);max-height:92vh;padding:1.25rem}dialog::backdrop{background:rgba(20,33,61,.5)}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.7rem}.fg .full{grid-column:1/-1}#pv{margin:.4rem 0;overflow:hidden}
+.bd{display:none}
+@media(max-width:860px){#sb{position:fixed;left:0;top:0;z-index:40;transform:translateX(-100%);width:260px;height:100%}body.open #sb{transform:none}body.col #sb{width:260px}body.col .lbl,body.col .brand span{display:inline}body.col .nb{display:inline}.bd{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:30}body.open .bd{display:block}#un{display:none}h1{font-size:1.1rem}}
+.au{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}.ac{width:min(94vw,420px)}.ac form{margin:.8rem 0}body.in .au{display:none}body:not(.in) .app,body:not(.in) .bd{display:none}
+.ck{display:flex;gap:.5rem;align-items:center;font-weight:500;margin:.4rem 0}.ck input{width:20px;min-height:20px;padding:0}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="au" id="auth"><div class="card ac"><div class="brand" style="padding:0 0 .6rem"><i data-lucide="book-open-check"></i><span>MyLibrary</span></div>
+<h2>Welcome</h2><div class="seg" role="group" aria-label="Account"><button type="button" data-am="in" aria-pressed="true">Log in</button><button type="button" data-am="up" aria-pressed="false">Create account</button></div>
+<form id="af" novalidate><div id="nmw" hidden><label for="an">Name</label><input id="an" autocomplete="name" maxlength="30"><div class="err" id="e-an"></div></div>
+<label for="ae">Email</label><input id="ae" type="email" autocomplete="email"><div class="err" id="e-ae"></div>
+<label for="ap">Password</label><input id="ap" type="password" autocomplete="current-password"><div class="err" id="e-ap"></div>
+<div id="cfw" hidden><label for="ac">Confirm password</label><input id="ac" type="password" autocomplete="new-password"><div class="err" id="e-ac"></div></div>
+<label class="ck"><input type="checkbox" id="ash"> Show password</label><label class="ck"><input type="checkbox" id="arm" checked> Keep me signed in on this device</label>
+<div class="err" id="e-af" role="alert"></div><p class="hint" id="am" role="status"></p><button class="btn" id="asb" type="submit">Log in</button></form>
+<div class="hint" style="border-top:1px solid var(--line);padding-top:.8rem">Demo account for assessors:<br><strong>demo@mylibrary.app</strong> / <strong>Demo1234</strong><br><button class="btn g s" id="ad" type="button" style="margin-top:.4rem">Use demo account</button></div>
+<p class="hint">This is a classroom demo. Accounts and passwords (stored only as salted hashes) stay in this browser, so do not reuse a real password.</p></div></div>
+<div class="app">
+<aside id="sb" aria-label="Sidebar"><div class="brand"><i data-lucide="book-open-check"></i><span>MyLibrary</span></div><nav id="nav" aria-label="Main"></nav></aside>
+<div class="bd" id="bd"></div>
+<div class="mw"><header class="top">
+<button class="ib" id="mt" type="button" aria-label="Toggle sidebar" aria-expanded="true"><i data-lucide="menu"></i></button>
+<h1 id="pt">Overview</h1>
+<form class="sr" id="gsf" role="search"><i data-lucide="search"></i><input id="gs" type="search" placeholder="Search title or author" aria-label="Search books by title or author" autocomplete="off"></form>
+<button class="ib" id="bell" type="button" aria-label="Notifications"><i data-lucide="bell"></i><span class="badge" id="bc" hidden></span></button>
+<a id="prof" href="#settings" aria-label="Profile and settings"><span class="av" id="av"></span><span id="un"></span></a><button class="ib" id="lo" type="button" aria-label="Log out" title="Log out"><i data-lucide="log-out"></i></button></header>
+<main id="main" tabindex="-1"><div id="page"></div></main></div></div>
+<div id="toast"></div><dialog id="dlg" aria-labelledby="dt"></dialog>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js"></script>
+<script>
+const ST=["Want to Read","Currently Reading","Completed","Abandoned","On Hold"],SI=["bookmark","book-open","circle-check","circle-x","circle-pause"];
+const G=["Fiction","Science Fiction","Fantasy","Philosophy","Self-Help","Biography","History","Technology","Other"],RS=["Lack of Time","Loss of Interest","Too Difficult","Changed Priorities","Other"];
+const C=[];"CN:China|JP:Japan|GB:United Kingdom|US:United States|FR:France|DE:Germany|KR:South Korea|IN:India|IL:Israel|NG:Nigeria|CO:Colombia|RU:Russia|CA:Canada|MX:Mexico|BR:Brazil|AR:Argentina|IE:Ireland|ES:Spain|IT:Italy|SE:Sweden|EG:Egypt|KE:Kenya|ZA:South Africa|AU:Australia|TR:Türkiye|CL:Chile|PE:Peru|PT:Portugal|NL:Netherlands|BE:Belgium|CH:Switzerland|AT:Austria|PL:Poland|UA:Ukraine|CZ:Czechia|GR:Greece|NO:Norway|DK:Denmark|FI:Finland|HU:Hungary|RO:Romania|IR:Iran|SA:Saudi Arabia|PK:Pakistan|BD:Bangladesh|TH:Thailand|VN:Vietnam|ID:Indonesia|MY:Malaysia|SG:Singapore|PH:Philippines|NZ:New Zealand|CU:Cuba|ET:Ethiopia|GH:Ghana|MA:Morocco|DZ:Algeria|LB:Lebanon|KZ:Kazakhstan|IS:Iceland|NP:Nepal|LK:Sri Lanka|JM:Jamaica|VE:Venezuela|UY:Uruguay|TZ:Tanzania|SN:Senegal".split("|").forEach(s=>C.push(s.split(":")));C.sort((a,b)=>a[1].localeCompare(b[1]));
+const N=Object.fromEntries(C);
+const REC=[["CO","Gabriel García Márquez","One Hundred Years of Solitude","Fiction",417],["RU","Fyodor Dostoevsky","Crime and Punishment","Fiction",545],["CL","Isabel Allende","The House of the Spirits","Fiction",433],["IT","Elena Ferrante","My Brilliant Friend","Fiction",331],["TR","Orhan Pamuk","Snow","Fiction",436],["EG","Naguib Mahfouz","Palace Walk","Fiction",498],["CA","Margaret Atwood","The Handmaid’s Tale","Fiction",311],["AR","Jorge Luis Borges","Ficciones","Fiction",174],["CZ","Franz Kafka","The Trial","Fiction",255],["ES","Miguel de Cervantes","Don Quixote","Fiction",1056]];
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const off=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.toLocaleDateString("en-CA")},today=()=>off(0),dd=(a,b)=>Math.round((new Date(b+"T00:00")-new Date(a+"T00:00"))/864e5);
+const fmt=d=>d?new Date(d+"T00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):"";
+const ic=()=>{try{lucide.createIcons()}catch(e){}};
+const SD=[["Three-Body Problem","Liu Cixin","CN","Science Fiction",400,400,"Completed",5,"Big ideas, slow start.",90,0,0,20],["To Live","Yu Hua","CN","Fiction",250,250,"Completed",4,"",130,0,0,65],
+["Norwegian Wood","Haruki Murakami","JP","Fiction",296,120,"Currently Reading",0,"",40,-12,14,0],["Kokoro","Natsume Sōseki","JP","Fiction",248,248,"Completed",4,"",160,0,0,100],
+["Pride and Prejudice","Jane Austen","GB","Fiction",432,432,"Completed",5,"A joy to reread.",200,0,0,150],["The Hobbit","J.R.R. Tolkien","GB","Fantasy",310,0,"Want to Read",0,"",140,0,0,0],
+["Atomic Habits","James Clear","US","Self-Help",320,320,"Completed",4,"",70,0,0,35],["Educated","Tara Westover","US","Biography",352,140,"Currently Reading",0,"",25,-5,20,0],
+["The Stranger","Albert Camus","FR","Philosophy",123,123,"Completed",4,"",50,0,0,12],["Les Misérables","Victor Hugo","FR","Fiction",1488,0,"Want to Read",0,"",200,0,0,0],
+["Perfume","Patrick Süskind","DE","Fiction",263,0,"Want to Read",0,"",100,0,0,0],["Siddhartha","Hermann Hesse","DE","Fiction",152,152,"Completed",5,"",95,0,0,45],
+["The Vegetarian","Han Kang","KR","Fiction",188,188,"Completed",4,"",30,0,0,5],["The God of Small Things","Arundhati Roy","IN","Fiction",340,0,"Want to Read",0,"",95,0,0,0],
+["Midnight’s Children","Salman Rushdie","IN","Fiction",647,200,"Abandoned",2,"Too dense for me right now.",180,0,0,0],["Things Fall Apart","Chinua Achebe","NG","Fiction",209,209,"Completed",4,"",60,0,0,28],["Sapiens","Yuval Noah Harari","IL","History",464,0,"Want to Read",0,"",30,0,0,0]];
+const LG={"The Hobbit":["Lack of Time"],"Les Misérables":["Lack of Time","Too Difficult"],"Perfume":["Changed Priorities"],"The God of Small Things":["Lack of Time"],"Midnight’s Children":["Too Difficult"]};
+const mk=(s,i)=>({id:i+1,sample:true,title:s[0],author:s[1],cc:s[2],genre:s[3],total:s[4],cur:s[5],status:s[6],rating:s[7],notes:s[8],added:off(-s[9]),start:s[10]||s[11]?off(s[10]):"",end:s[10]||s[11]?off(s[11]):"",fin:s[12]?off(-s[12]):"",img:"",log:(LG[s[0]]||[]).map(r=>({d:off(-30),r,n:""}))});
+let KEY="",S=null,U=null;
+
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast("Browser storage is full. Remove some cover images to keep saving.")}};
+let f={q:"",st:"All",g:"All",so:"title",view:"grid"},ptab="Unfinished",sel=null,wm=null,page="overview";
+const bks=()=>S.books,pct=b=>b.total?Math.min(100,Math.round(b.cur/b.total*100)):0,wait=b=>dd(b.rev||b.added,today()),due=()=>bks().filter(b=>b.status==="Want to Read"&&wait(b)>S.days);
+const stars=n=>n?`<span class="stars" aria-label="${n} out of 5 stars">${"★".repeat(n)}${"☆".repeat(5-n)}</span>`:`<span class="hint">Not rated</span>`;
+const bdg=s=>`<span class="bdg s${ST.indexOf(s)}"><i data-lucide="${SI[ST.indexOf(s)]}"></i>${s}</span>`;
+const cv=(b,s)=>b.img?`<img class="cover${s?" sm":""}" src="${b.img}" alt="Cover of ${esc(b.title)}">`:`<div class="cover ph${s?" sm":""}" role="img" aria-label="No cover for ${esc(b.title)}">${esc((b.title||"?")[0])}</div>`;
+const bar=b=>`<div class="pb" role="progressbar" aria-label="Progress of ${esc(b.title)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct(b)}"><i style="width:${pct(b)}%"></i></div><span class="hint">${b.cur} / ${b.total} pages · ${pct(b)}% completed</span>`;
+const al=c=>c==="TW"?"CN":c;const nm=c=>{c=al(c);return N[c]||(wm&&wm.mapData&&wm.mapData.paths&&wm.mapData.paths[c]&&wm.mapData.paths[c].name)||c};
+function dailyT(b){if(!b.start||!b.end||b.status==="Completed"||b.status==="Abandoned")return null;const t=today(),from=b.start>t?b.start:t,n=dd(from,b.end)+1,left=Math.max(0,b.total-b.cur);return n<1?{late:1,left}:{n,left,per:Math.ceil(left/n)}}
+const planLine=b=>{const d=dailyT(b);return d?(d.late?`Target date ${fmt(b.end)} has passed. Update the plan.`:`${d.left} pages left ÷ ${d.n} day${d.n>1?"s":""} = ${d.per} pages a day (target ${fmt(b.end)})`):""};
+function toast(m,u){const t=document.createElement("div");t.className="t";t.innerHTML=`<span>${esc(m)}</span>`;if(u){const b=document.createElement("button");b.textContent="Undo";b.onclick=()=>{u();t.remove()};t.append(b)}$("#toast").append(t);setTimeout(()=>t.remove(),6000)}
+function ask(title,msg,ok,fn){const d=$("#dlg");d.innerHTML=`<h2 id="dt">${esc(title)}</h2><p>${esc(msg)}</p><div class="row"><button class="btn g" id="no" type="button">Cancel</button><button class="btn d" id="ok" type="button">${ok}</button></div>`;d.showModal();$("#no").onclick=()=>d.close();$("#ok").onclick=()=>{d.close();fn()}}
+function setPage(b,v){b.cur=v;if(v>=b.total){b.status="Completed";b.fin=b.fin||today()}else{if(v>0&&(b.status==="Want to Read"||b.status==="On Hold"||b.status==="Completed"))b.status="Currently Reading";if(b.status!=="Completed")b.fin=""}}
+function pageInputs(){$$("[data-p]").forEach(i=>i.onchange=()=>{const b=bks().find(x=>x.id==i.dataset.p),v=Number(i.value);if(i.value===""||!Number.isInteger(v)||v<0||v>b.total){i.value=b.cur;return toast(`Enter a whole page number from 0 to ${b.total}. It cannot be higher than the total pages.`)}
+setPage(b,v);save();toast(`Progress saved: ${pct(b)}% of “${b.title}”${b.status==="Completed"?". Marked as Completed":""}`);refresh()})}
+function del(id){const i=bks().findIndex(b=>b.id===id),b=bks()[i];ask("Delete this book?",`“${b.title}” will be removed from your library. You can undo right after.`,"Delete",()=>{bks().splice(i,1);save();refresh();toast(`Deleted “${b.title}”`,()=>{bks().splice(Math.min(i,bks().length),0,b);save();refresh();toast(`Restored “${b.title}”`)})})}
+
+/* ---------- charts ---------- */
+function donut(items){const tot=items.reduce((s,i)=>s+i.n,0),R=54,L=2*Math.PI*R;let a=0;
+return`<svg viewBox="0 0 140 140" width="170" height="170" role="img" aria-label="Status distribution: ${items.map(i=>i.l+" "+i.n).join(", ")}"><circle cx="70" cy="70" r="${R}" fill="none" stroke="#ece6da" stroke-width="22"/>`+items.filter(i=>i.n).map(i=>{const l=i.n/tot*L,s=`<circle cx="70" cy="70" r="${R}" fill="none" stroke="${i.c}" stroke-width="22" stroke-dasharray="${l} ${L-l}" stroke-dashoffset="${-a}" transform="rotate(-90 70 70)"/>`;a+=l;return s}).join("")+`<text x="70" y="70" text-anchor="middle" font-size="24" font-weight="700" fill="#14213d">${tot}</text><text x="70" y="88" text-anchor="middle" font-size="11" fill="#586178">books</text></svg>`}
+function vbars(items){const mx=Math.max(1,...items.map(i=>i.n)),w=360/items.length;return`<svg viewBox="0 0 360 190" role="img" aria-label="Books completed per month: ${items.map(i=>i.l+" "+i.n).join(", ")}" style="width:100%;max-height:230px">`+items.map((i,k)=>{const h=i.n/mx*120,x=k*w+w*.2;return`<rect x="${x}" y="${150-h}" width="${w*.6}" height="${h}" rx="6" fill="#2f7656"/><text x="${x+w*.3}" y="${143-h}" text-anchor="middle" font-size="13" font-weight="700" fill="#14213d">${i.n}</text><text x="${x+w*.3}" y="172" text-anchor="middle" font-size="12" fill="#586178">${i.l}</text>`}).join("")+`<line x1="0" y1="150" x2="360" y2="150" stroke="#e6dfd2"/></svg>`}
+const SC=["#3d5f94","#c98a1b","#2f7656","#b42318","#6b7088"];
+
+/* ---------- pages ---------- */
+function overview(){const b=bks(),c=s=>b.filter(x=>x.status===s).length,tp=b.reduce((s,x)=>s+x.total,0),rp=b.reduce((s,x)=>s+x.cur,0),d=due(),smp=b.filter(x=>x.sample).length;
+const K=[["Total books",b.length,"library"],["Currently reading",c("Currently Reading"),"book-open"],["Completed",c("Completed"),"circle-check"],["Want to read",c("Want to Read"),"bookmark"],["Backlogged",d.length,"history"],["Overall progress",(tp?Math.round(rp/tp*100):0)+"%","trending-up"]];
+const mo=[];for(let i=5;i>=0;i--){const x=new Date();x.setDate(1);x.setMonth(x.getMonth()-i);const k=x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0");mo.push({l:x.toLocaleString("en-GB",{month:"short"}),n:b.filter(y=>y.fin&&y.fin.startsWith(k)).length})}
+const comp=b.filter(x=>x.status==="Completed"),cc={};comp.forEach(x=>cc[x.cc]=(cc[x.cc]||0)+1);const top=Object.entries(cc).sort((a,z)=>z[1]-a[1])[0];
+const cur=b.filter(x=>x.status==="Currently Reading"),rec=[...b].sort((x,y)=>y.added.localeCompare(x.added)||y.id-x.id).slice(0,4);
+return`${smp?`<div class="alert" style="border-color:var(--b);background:var(--bs)"><span><strong>${smp} sample book${smp>1?"s":""}</strong> are included so you can explore. They are marked “Sample”. Remove them in Settings.</span></div>`:""}
+<div class="kp">${K.map(k=>`<div class="card kpi"><span class="ico"><i data-lucide="${k[2]}"></i></span><div><b>${k[1]}</b><span>${k[0]}</span></div></div>`).join("")}</div>
+<div class="g2"><div class="card"><h2>Reading activity</h2><p class="hint">Books completed in the last 6 months.</p>${vbars(mo)}</div>
+<div class="card"><h2>Backlog alerts</h2>${d.length?`<p class="hint">Waiting longer than ${S.days} days.</p>`+d.slice(0,3).map(x=>`<div class="it">${cv(x,1)}<div><strong>${esc(x.title)}</strong><br><span class="hint">${wait(x)} days unread</span></div></div>`).join("")+`<p><a class="btn s" href="#review">Review ${d.length} book${d.length>1?"s":""}</a></p>`:`<div class="empty">No backlogged books. Nothing has waited longer than ${S.days} days.</div>`}</div></div>
+<div class="g2"><div class="card"><h2>Currently reading</h2>${cur.length?cur.map(x=>`<div style="overflow:hidden;margin-bottom:.8rem">${cv(x,1)}<strong>${esc(x.title)}</strong> <span class="hint">${esc(x.author)}</span>${bar(x)}</div>`).join(""):`<div class="empty">Nothing in progress. Open My Books and start one.</div>`}</div>
+<div class="card"><h2>Recently added</h2>${rec.length?rec.map(x=>`<div class="it">${cv(x,1)}<div><strong>${esc(x.title)}</strong><br><span class="hint">${esc(x.author)} · added ${fmt(x.added)}</span><br>${bdg(x.status)}</div></div>`).join(""):`<div class="empty">No books yet.</div>`}</div></div>
+<div class="card"><h2>Global reading statistics</h2><div class="kp" style="margin:0"><div><b style="font:700 1.6rem Fraunces,serif">${Object.keys(cc).length}</b><br><span class="hint">countries explored</span></div><div><b style="font:700 1.6rem Fraunces,serif">${comp.length}</b><br><span class="hint">books completed</span></div><div><b style="font:700 1.6rem Fraunces,serif">${top?esc(N[top[0]]||top[0]):"–"}</b><br><span class="hint">most-read country${top?" ("+top[1]+")":""}</span></div></div><p><a class="btn s g" href="#map">Open the map</a></p></div>`}
+
+function books(){return`<div class="tools" role="search"><div class="w"><label for="q">Search title or author</label><input id="q" type="search" value="${esc(f.q)}" autocomplete="off"></div>
+<div><label for="fg">Category</label><select id="fg"><option>All</option>${G.map(g=>`<option${f.g===g?" selected":""}>${g}</option>`).join("")}</select></div>
+<div><label for="fs">Status</label><select id="fs"><option>All</option>${ST.map(s=>`<option${f.st===s?" selected":""}>${s}</option>`).join("")}</select></div>
+<div><label for="so">Sort by</label><select id="so">${[["title","Title"],["pct","Progress"],["rating","Rating"],["added","Date added"]].map(o=>`<option value="${o[0]}"${f.so===o[0]?" selected":""}>${o[1]}</option>`).join("")}</select></div>
+<div class="seg" role="group" aria-label="Layout"><button type="button" data-v="grid" aria-pressed="${f.view==="grid"}">Cards</button><button type="button" data-v="table" aria-pressed="${f.view==="table"}">Table</button></div>
+<button class="btn g" id="reset" type="button">Reset filters</button><button class="btn" id="add" type="button"><i data-lucide="plus"></i>Add book</button></div>
+<p class="st" id="cnt" role="status" aria-live="polite"></p><div id="res"></div>`}
+function list(){const q=f.q.trim().toLowerCase();return bks().filter(b=>(f.st==="All"||b.status===f.st)&&(f.g==="All"||b.genre===f.g)&&(!q||(b.title+" "+b.author).toLowerCase().includes(q))).sort((a,b)=>f.so==="title"?a.title.localeCompare(b.title):f.so==="pct"?pct(b)-pct(a):f.so==="rating"?b.rating-a.rating:b.added.localeCompare(a.added))}
+const acts=b=>`<button class="btn g s" data-e="${b.id}" type="button"><i data-lucide="pencil"></i>Edit</button><button class="btn dg s" data-x="${b.id}" type="button" aria-label="Delete ${esc(b.title)}"><i data-lucide="trash-2"></i>Delete</button>`;
+function bk(){const r=list(),act=[f.q&&`“${f.q}”`,f.g!=="All"&&f.g,f.st!=="All"&&f.st].filter(Boolean);
+$("#cnt").textContent=`Showing ${r.length} of ${bks().length} books · ${act.length?"Filters: "+act.join(", "):"No filters applied"}`;
+$("#res").innerHTML=!r.length?`<div class="card empty"><h3>No books found</h3><p>Try a different search or reset the filters, or add a new book.</p></div>`:f.view==="grid"?`<div class="books">${r.map(b=>`<article class="card book">${cv(b)}<h3>${esc(b.title)}</h3><p class="hint">${esc(b.author)} · ${esc(nm(b.cc))} · ${esc(b.genre)}</p><p>${bdg(b.status)} ${b.sample?'<span class="tg">Sample</span>':""}</p><p>${stars(b.rating)}</p>${bar(b)}${planLine(b)?`<p class="hint">${planLine(b)}</p>`:""}<div class="row">${acts(b)}</div></article>`).join("")}</div>`
+:`<div class="card tw"><table><thead><tr><th scope="col">Book</th><th scope="col">Author</th><th scope="col">Country</th><th scope="col">Category</th><th scope="col">Status</th><th scope="col">Progress</th><th scope="col">Actions</th></tr></thead><tbody>${r.map(b=>`<tr><td style="display:flex;align-items:center">${cv(b,1)}<strong>${esc(b.title)}</strong>${b.sample?' <span class="tg">Sample</span>':""}</td><td>${esc(b.author)}</td><td>${esc(nm(b.cc))}</td><td>${esc(b.genre)}</td><td>${bdg(b.status)}</td><td style="min-width:130px">${pct(b)}%<div class="pb"><i style="width:${pct(b)}%"></i></div></td><td><div class="row" style="margin:0">${acts(b)}</div></td></tr>`).join("")}</tbody></table></div>`;
+$$("[data-e]").forEach(x=>x.onclick=()=>form(+x.dataset.e));$$("[data-x]").forEach(x=>x.onclick=()=>del(+x.dataset.x));ic()}
+function bindBooks(){bk();const setF=(k,v)=>{f[k]=v;bk()};$("#q").oninput=e=>{f.q=e.target.value;$("#gs").value=f.q;bk()};$("#fg").onchange=e=>setF("g",e.target.value);$("#fs").onchange=e=>setF("st",e.target.value);$("#so").onchange=e=>setF("so",e.target.value);
+$$("[data-v]").forEach(x=>x.onclick=()=>{f.view=x.dataset.v;$$("[data-v]").forEach(y=>y.setAttribute("aria-pressed",y===x));bk()});
+$("#reset").onclick=()=>{f={...f,q:"",st:"All",g:"All",so:"title"};$("#gs").value="";render();toast("Filters cleared")};$("#add").onclick=()=>form()}
+
+function progress(){const r=bks().filter(b=>ptab==="Completed"?b.status==="Completed":b.status!=="Completed");
+return`<div class="tools"><div class="seg" role="group" aria-label="Book list"><button type="button" data-t="Unfinished" aria-pressed="${ptab==="Unfinished"}">Unfinished (${bks().filter(b=>b.status!=="Completed").length})</button><button type="button" data-t="Completed" aria-pressed="${ptab==="Completed"}">Completed (${bks().filter(b=>b.status==="Completed").length})</button></div></div>
+${r.length?r.map(b=>`<article class="card book" style="margin-bottom:.8rem">${cv(b)}<h3>${esc(b.title)}</h3><p class="hint">${esc(b.author)}</p><p>${bdg(b.status)}</p>${bar(b)}
+${b.status==="Completed"?`<p>${stars(b.rating)}</p><p class="hint">${b.notes?esc(b.notes.slice(0,160)):"No review written yet."}</p><div class="row"><button class="btn g s" data-e="${b.id}" type="button"><i data-lucide="pencil"></i>Edit rating and review</button></div>`:`<div class="row up"><label for="p${b.id}" style="margin:0">Current page</label><input id="p${b.id}" type="number" min="0" max="${b.total}" value="${b.cur}" data-p="${b.id}"><span class="hint">of ${b.total}. Press Tab or Enter to save.</span></div>`}</article>`).join(""):`<div class="card empty"><h3>${ptab==="Completed"?"No completed books yet":"Everything is finished"}</h3><p>${ptab==="Completed"?"Finish a book and it will appear here.":"Add a new book to keep reading."}</p></div>`}`}
+
+function planner(){const r=bks().filter(b=>b.status!=="Completed"&&b.status!=="Abandoned");
+return`<div class="card" style="margin-bottom:1rem"><h2>How the daily target works</h2><p class="hint">Remaining pages ÷ days from today (or your start date) to the target date, rounded up. Example: 300 pages in 15 days = 20 pages a day.</p></div>
+${r.length?`<div class="books">${r.map(b=>`<article class="card book">${cv(b,1)}<h3>${esc(b.title)}</h3><p class="hint">${esc(b.author)}</p><p>${bdg(b.status)}</p>${b.start&&b.end?`<p class="hint">${fmt(b.start)} to ${fmt(b.end)}</p><p><strong>${planLine(b)}</strong></p>`:`<p class="hint">No reading plan yet.</p>`}<div class="row"><button class="btn s" data-pl="${b.id}" type="button"><i data-lucide="calendar-days"></i>${b.start?"Edit plan":"Set plan"}</button></div></article>`).join("")}</div>`:`<div class="card empty"><h3>No books to plan</h3><p>Add a book or change a status to start planning.</p></div>`}`}
+function planForm(id){const b=bks().find(x=>x.id===id),d=$("#dlg");d.innerHTML=`<h2 id="dt">Reading plan: ${esc(b.title)}</h2><form id="pf" novalidate><p class="hint">${b.total-b.cur} pages left.</p><div class="fg"><div><label for="ps">Start date</label><input id="ps" type="date" value="${b.start||today()}"><div class="err" id="e-ps"></div></div><div><label for="pe">Target completion date</label><input id="pe" type="date" value="${b.end}"><div class="err" id="e-pe"></div></div></div><p class="hint" id="pv2" aria-live="polite"></p><div class="row"><button class="btn" type="submit">Save plan</button><button class="btn g" type="button" id="cn">Cancel</button>${b.start?'<button class="btn dg" type="button" id="rp">Remove plan</button>':""}</div></form>`;d.showModal();
+const calc=()=>{const s=$("#ps").value,e=$("#pe").value;if(!s||!e||e<s)return $("#pv2").textContent="";const t=today(),n=dd(s>t?s:t,e)+1;$("#pv2").textContent=n<1?"":`Preview: ${Math.ceil((b.total-b.cur)/n)} pages a day for ${n} days.`};$("#ps").oninput=calc;$("#pe").oninput=calc;calc();
+$("#cn").onclick=()=>d.close();if($("#rp"))$("#rp").onclick=()=>{b.start=b.end="";save();d.close();refresh();toast("Plan removed")};
+$("#pf").onsubmit=e=>{e.preventDefault();const s=$("#ps").value,en=$("#pe").value,er={};if(!s)er.ps="Choose a start date.";if(!en)er.pe="Choose a target date.";else if(s&&en<s)er.pe="Target date must be on or after the start date.";else if(en<today())er.pe="Target date is in the past. Choose today or later.";
+["ps","pe"].forEach(k=>{$("#e-"+k).textContent=er[k]||"";$("#"+k).setAttribute("aria-invalid",!!er[k])});if(Object.keys(er).length)return $("#"+Object.keys(er)[0]).focus();
+b.start=s;b.end=en;save();d.close();refresh();toast(`Plan saved: ${planLine(b)}`)}}
+
+function review(){const r=due().sort((a,b)=>wait(b)-wait(a));
+return`<div class="card" style="margin-bottom:1rem"><p style="margin:0">Books on your “Want to Read” list for more than <strong>${S.days} days</strong> appear here. Change the limit in <a href="#settings">Settings</a>.</p></div>
+${r.length?r.map(b=>`<article class="card book" style="margin-bottom:.8rem" data-b="${b.id}">${cv(b)}<h3>${esc(b.title)}</h3><p class="hint">${esc(b.author)}</p><p><strong>${wait(b)} days</strong> unread. Still want to read it?</p>
+<div class="rev" style="clear:both"><div><label for="ns${b.id}">New status</label><select id="ns${b.id}"><option value="Currently Reading">Currently Reading</option><option value="Want to Read" selected>Keep Want to Read</option><option value="On Hold">On Hold</option><option value="Abandoned">Abandoned</option></select></div>
+<div><label for="rr${b.id}">Reason for the delay</label><select id="rr${b.id}"><option value="">Choose a reason</option>${RS.map(s=>`<option>${s}</option>`).join("")}</select></div>
+<div><label for="rn${b.id}">Note (required for Other)</label><input id="rn${b.id}" maxlength="100"></div></div><div class="err" id="re${b.id}" role="alert"></div><button class="btn s" data-r="${b.id}" type="button">Save review</button></article>`).join("")
+:`<div class="card empty"><h3>Your backlog is clear</h3><p>No “Want to Read” book has waited longer than ${S.days} days.</p></div>`}`}
+function reviewBind(){$$("[data-r]").forEach(x=>x.onclick=()=>{const id=+x.dataset.r,b=bks().find(y=>y.id===id),ns=$("#ns"+id).value,r=$("#rr"+id).value,n=$("#rn"+id).value.trim(),er=$("#re"+id);
+if(!r){$("#rr"+id).focus();return er.textContent="Choose a reason before saving."}if(r==="Other"&&!n){$("#rn"+id).focus();return er.textContent="Write a short note for “Other”."}
+b.log=b.log||[];b.log.push({d:today(),r,n,to:ns});b.status=ns;b.rev=today();if(ns==="Currently Reading"&&!b.start){b.start=today()}save();refresh();toast(ns==="Want to Read"?`Kept “${b.title}” as Want to Read. Reason saved: ${r==="Other"?n:r}.`:`“${b.title}” is now ${ns}. Reason saved: ${r==="Other"?n:r}.`)})}
+
+function analysis(){const b=bks(),un=b.filter(x=>x.status==="Want to Read"),d=due(),cnt={};b.forEach(x=>(x.log||[]).forEach(l=>{const k=l.r==="Other"&&l.n?"Other: "+l.n:l.r;cnt[k]=(cnt[k]||0)+1}));
+const rs=Object.entries(cnt).sort((a,z)=>z[1]-a[1]),mx=rs.length?rs[0][1]:1,items=ST.map((s,i)=>({l:s,n:b.filter(x=>x.status===s).length,c:SC[i]}));
+const tips=[];if(d.length)tips.push(`${d.length} book${d.length>1?"s have":" has"} waited more than ${S.days} days. Open <a href="#review">Backlog Review</a> and decide on each one.`);
+if(rs.length){const t=rs[0][0];tips.push({"Lack of Time":"Time is your top delay reason. Try a fixed 15-minute slot each day, or start with your shortest backlog book.","Too Difficult":"Difficulty is your top delay reason. Pair a hard book with an easier one, or look for a study guide.","Loss of Interest":"Interest is your top delay reason. It is fine to mark books you no longer want as Abandoned to keep the list honest.","Changed Priorities":"Changing priorities is your top delay reason. Move books that no longer matter to On Hold or Abandoned."}[t]||"Review the reasons below and decide which books still deserve your time.")}
+const sh=[...un].sort((x,y)=>x.total-y.total)[0];if(sh)tips.push(`Quick win: “${esc(sh.title)}” is your shortest unread book at ${sh.total} pages.`);if(!tips.length)tips.push("Your backlog looks healthy. Keep adding books you are excited to read.");
+return`<div class="kp"><div class="card kpi"><span class="ico"><i data-lucide="bookmark"></i></span><div><b>${un.length}</b><span>Total unread books</span></div></div><div class="card kpi"><span class="ico"><i data-lucide="history"></i></span><div><b>${d.length}</b><span>Over the ${S.days}-day limit</span></div></div><div class="card kpi"><span class="ico"><i data-lucide="clock"></i></span><div><b>${un.length?Math.max(...un.map(wait)):0}</b><span>Longest wait (days)</span></div></div></div>
+<div class="g2"><div class="card"><h2>Books by status</h2><div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center">${donut(items)}<div class="lg" style="flex-direction:column">${items.map(i=>`<span><i class="sw" style="background:${i.c}"></i>${i.l}: <strong>${i.n}</strong></span>`).join("")}</div></div></div>
+<div class="card"><h2>Most common reasons for delay</h2>${rs.length?rs.map(([k,n])=>`<div class="rb"><span>${esc(k)}</span><i style="width:${n/mx*100}%"></i><b>${n}</b></div>`).join(""):`<div class="empty">No reasons recorded yet. Review a backlogged book to start.</div>`}</div></div>
+<div class="card"><h2>Recommendations</h2><ul style="margin:.3rem 0;padding-left:1.2rem">${tips.map(t=>`<li style="margin:.4rem 0">${t}</li>`).join("")}</ul></div>`}
+
+function mapPage(){return`<div class="card" style="margin-bottom:1rem"><div class="tools"><div><label for="cs2">Explore a country</label><select id="cs2"></select></div><button class="btn g" id="zr" type="button">Reset map view</button></div>
+<div id="map" aria-label="Interactive world map showing countries of authors you have completed"></div>
+<div class="lg"><span><i class="sw" style="background:#b9c9bd"></i>No completed books</span><span><i class="sw" style="background:#cfe8da"></i>1 completed</span><span><i class="sw" style="background:#86c3a2"></i>2 completed</span><span><i class="sw" style="background:#2f7656"></i>3 or more</span></div>
+<p class="hint" id="mapnote">Scroll, pinch or use + and − to zoom. Drag to move. Select a country to see its books.</p></div>
+<div class="g2"><div class="card" id="cx" aria-live="polite"></div><div class="card" id="ex"></div></div>
+<div class="card"><h2>Reading statistics by country</h2><div class="tw" id="cs"></div></div>`}
+function mapData(){const cnt={};bks().filter(b=>b.status==="Completed").forEach(b=>cnt[b.cc]=(cnt[b.cc]||0)+1);return cnt}
+function mapPanels(){const cnt=mapData(),nc=Object.keys(cnt).length;
+$("#cs2").innerHTML=`<option value="">Choose a country</option>`+C.map(c=>`<option value="${c[0]}"${c[0]===sel?" selected":""}>${esc(c[1])}${cnt[c[0]]?" ("+cnt[c[0]]+" completed)":""}</option>`).join("");
+if(!sel)$("#cx").innerHTML=`<h2>Country exploration</h2><p><strong>${nc}</strong> countr${nc===1?"y":"ies"} explored so far. Select a country on the map or from the list to see authors and completed books.</p>`;
+else{const all=bks().filter(b=>b.cc===sel),cp=all.filter(b=>b.status==="Completed"),ot=all.filter(b=>b.status!=="Completed");
+$("#cx").innerHTML=`<h2>${esc(nm(sel))}</h2><p class="hint">${cp.length} completed · ${[...new Set(cp.map(b=>b.author))].length} author${cp.length===1?"":"s"} · ${cp.reduce((s,b)=>s+b.total,0).toLocaleString()} pages read</p>`+(cp.length?cp.map(b=>`<div class="it">${cv(b,1)}<div><strong>${esc(b.title)}</strong><br><span class="hint">${esc(b.author)}</span> ${stars(b.rating)}</div></div>`).join(""):`<p>No completed books from ${esc(nm(sel))} yet.</p>`)+(ot.length?`<h3 style="margin-top:.8rem">Also in your library</h3>`+ot.map(b=>`<p class="hint" style="margin:.2rem 0">${esc(b.title)} · ${b.status}</p>`).join(""):"")}
+const have=new Set(bks().map(b=>b.title)),rec=REC.filter(r=>!cnt[r[0]]&&!have.has(r[2])).slice(0,4);
+$("#ex").innerHTML=`<h2>Explore new countries</h2><p class="hint">Countries you have not completed a book from yet.</p>`+(rec.length?rec.map((r,i)=>`<div class="it"><div><strong>${esc(nm(r[0]))}</strong><br>${esc(r[2])} <span class="hint">by ${esc(r[1])}, ${r[4]} pages</span></div><button class="btn g s" data-ad="${i}" type="button" style="margin-left:auto">Add</button></div>`).join(""):`<div class="empty">You have covered every suggested country. Great reading!</div>`);
+$$("[data-ad]").forEach(x=>x.onclick=()=>{const r=rec[+x.dataset.ad];bks().push({id:Math.max(0,...bks().map(b=>b.id))+1,sample:false,title:r[2],author:r[1],cc:r[0],genre:r[3],total:r[4],cur:0,status:"Want to Read",rating:0,notes:"",added:today(),start:"",end:"",fin:"",img:"",log:[]});save();refresh();toast(`Added “${r[2]}” to Want to Read`)});
+const rows=Object.keys(cnt).sort((a,z)=>cnt[z]-cnt[a]).map(k=>{const r=bks().filter(b=>b.cc===k&&b.status==="Completed"),rt=r.filter(b=>b.rating);return`<tr><td>${esc(nm(k))}</td><td>${r.length}</td><td>${[...new Set(r.map(b=>b.author))].length}</td><td>${r.reduce((s,b)=>s+b.total,0).toLocaleString()}</td><td>${rt.length?(rt.reduce((s,b)=>s+b.rating,0)/rt.length).toFixed(1):"–"}</td></tr>`}).join("");
+$("#cs").innerHTML=rows?`<table><thead><tr><th scope="col">Country</th><th scope="col">Completed books</th><th scope="col">Authors</th><th scope="col">Pages read</th><th scope="col">Avg rating</th></tr></thead><tbody>${rows}</tbody></table>`:`<div class="empty">Complete a book to see country statistics.</div>`;mapSync();ic()}
+function mapSync(){if(!wm)return;const cnt=mapData();let st=document.getElementById("mapcss");if(!st){st=document.createElement("style");st.id="mapcss";document.head.append(st)}
+st.textContent=`#map path[data-code]:hover{stroke:#14213d!important;stroke-width:1.2!important}`+Object.entries(cnt).map(([k,n])=>`#map path[data-code="${k}"]${k==="CN"?',#map path[data-code="TW"]':""}{fill:${n>=3?"#2f7656":n===2?"#86c3a2":"#cfe8da"}!important}`).join("")+(sel?`#map path[data-code="${sel}"]${sel==="CN"?',#map path[data-code="TW"]':""}{stroke:#14213d!important;stroke-width:1.8!important}`:"");
+try{wm.clearSelectedRegions();wm.setSelectedRegions(Object.keys(cnt).flatMap(k=>k==="CN"?["CN","TW"]:[k]))}catch(x){}}
+function mapInit(){wm=null;if(typeof jsVectorMap==="undefined"){$("#mapnote").textContent="The map could not be loaded. Use the country list to explore instead.";return}
+try{wm=new jsVectorMap({selector:"#map",map:"world",zoomButtons:true,zoomOnScroll:true,zoomMax:12,zoomMin:1,regionsSelectable:false,regionStyle:{initial:{fill:"#b9c9bd",stroke:"#ffffff",strokeWidth:.4},hover:{fill:"#9fb7a8"},selected:{fill:"#2f7656"}},
+onRegionClick:(e,code)=>{code=al(code);try{if(!N[code]){const n=wm.mapData.paths[code].name;C.push([code,n]);N[code]=n}}catch(x){}sel=code;mapPanels();try{wm.setFocus({region:code,animate:true})}catch(x){}},
+onRegionTooltipShow:(e,t,code)=>{try{code=al(code);const n=bks().filter(b=>b.cc===code&&b.status==="Completed").length;t.text(`${nm(code)}: ${n} completed`,true)}catch(x){}}})}catch(x){wm=null;$("#mapnote").textContent="The map could not be started. Use the country list to explore instead."}}
+function mapBind(){mapInit();mapPanels();$("#cs2").onchange=e=>{sel=e.target.value||null;mapPanels();if(sel&&wm){try{wm.setFocus({region:sel,animate:true})}catch(x){}}};
+$("#zr").onclick=()=>{if(wm){try{wm.destroy()}catch(x){}$("#map").innerHTML=""}mapInit();mapSync();toast("Map view reset")}}
+
+function settings(){return`<div class="g2"><form class="card" id="sf" novalidate><h2>Profile</h2><label for="sn">Display name</label><input id="sn" value="${esc(S.name)}" maxlength="30"><div class="err" id="e-sn"></div>
+<h2 style="margin-top:.8rem">Backlog detection</h2><label for="sd">Days before a “Want to Read” book counts as backlogged</label><input id="sd" type="number" min="1" max="365" value="${S.days}"><div class="err" id="e-sd"></div><p class="hint">Default is 90 days.</p><button class="btn" type="submit">Save settings</button></form>
+<div class="card"><h2>Account</h2><p class="hint">Signed in as ${esc(U.email)}.</p><p><button class="btn g" id="lo2" type="button">Log out</button></p><h2>Your data</h2><p class="hint">Everything is stored only in this browser. Sample books are marked “Sample”.</p><div class="row"><button class="btn g" id="rs" type="button">Remove sample books</button><button class="btn g" id="rl" type="button">Restore sample data</button><button class="btn dg" id="ra" type="button">Delete all books</button></div></div></div>`}
+function settingsBind(){$("#lo2").onclick=logout;$("#sf").onsubmit=e=>{e.preventDefault();const n=$("#sn").value.trim(),d=Number($("#sd").value),er={};if(!n)er.sn="Enter a display name.";if(!$("#sd").value||!Number.isInteger(d)||d<1||d>365)er.sd="Enter a whole number from 1 to 365.";
+["sn","sd"].forEach(k=>{$("#e-"+k).textContent=er[k]||"";$("#"+k).setAttribute("aria-invalid",!!er[k])});if(Object.keys(er).length)return $("#"+Object.keys(er)[0]).focus();S.name=n;S.days=d;save();refresh();toast(`Settings saved. Backlog limit is ${d} days.`)};
+$("#rs").onclick=()=>ask("Remove sample books?","Only the sample books will be deleted. Books you added stay.","Remove",()=>{S.books=S.books.filter(b=>!b.sample);save();refresh();toast("Sample books removed")});
+$("#rl").onclick=()=>ask("Restore sample data?","This replaces ALL books with the original sample books. Books you added will be lost.","Restore",()=>{S.books=SD.map(mk);save();refresh();toast("Sample data restored")});
+$("#ra").onclick=()=>ask("Delete all books?","Every book, review and reason will be permanently deleted.","Delete all",()=>{S.books=[];save();refresh();toast("All books deleted")})}
+
+/* ---------- add / edit form ---------- */
+function form(id,cc){const b=id?bks().find(x=>x.id===id):{title:"",author:"",cc:cc||"",genre:G[0],status:"Want to Read",cur:0,total:"",rating:0,notes:"",start:"",end:"",img:""},d=$("#dlg");
+const fl=(k,l,h,full)=>`<div class="${full?"full":""}"><label for="f-${k}">${l}</label>${h}<div class="err" id="e-${k}"></div></div>`,op=(a,v)=>a.map(x=>`<option${x===v?" selected":""}>${x}</option>`).join("");
+d.innerHTML=`<h2 id="dt">${id?"Edit book":"Add a book"}</h2><form id="fm" novalidate><div class="fg">
+${fl("title","Title *",`<input id="f-title" value="${esc(b.title)}" maxlength="120">`)}${fl("author","Author *",`<input id="f-author" value="${esc(b.author)}" maxlength="80">`)}
+${fl("cc","Author’s country *",`<select id="f-cc"><option value="">Choose country</option>${C.map(c=>`<option value="${c[0]}"${c[0]===b.cc?" selected":""}>${esc(c[1])}</option>`).join("")}</select>`)}${fl("genre","Category",`<select id="f-genre">${op(G,b.genre)}</select>`)}
+${fl("total","Total pages *",`<input id="f-total" type="number" value="${b.total}">`)}${fl("cur","Current page",`<input id="f-cur" type="number" value="${b.cur}">`)}
+${fl("status","Status",`<select id="f-status">${op(ST,b.status)}</select>`)}${fl("rating","Rating",`<select id="f-rating">${[0,1,2,3,4,5].map(n=>`<option value="${n}"${n===b.rating?" selected":""}>${n?n+" star"+(n>1?"s":""):"Not rated"}</option>`).join("")}</select>`)}
+${fl("start","Start date",`<input id="f-start" type="date" value="${b.start}">`)}${fl("end","Target completion date",`<input id="f-end" type="date" value="${b.end}">`)}
+${fl("img","Cover image (optional)",`<input id="f-img" type="file" accept="image/png,image/jpeg,image/webp,image/gif"><div id="pv"></div><button class="btn g s" type="button" id="rm" hidden>Remove image</button>`,1)}
+${fl("notes","Your thoughts and review",`<textarea id="f-notes" rows="3" maxlength="600">${esc(b.notes)}</textarea>`,1)}</div>
+<div class="row"><button class="btn" type="submit">Save book</button><button class="btn g" type="button" id="cn">Cancel</button></div></form>`;
+let img=b.img||"";const pv=()=>{$("#pv").innerHTML=img?`<img class="cover" src="${img}" alt="Cover preview">`:"";$("#rm").hidden=!img};
+d.showModal();ic();$("#cn").onclick=()=>d.close();pv();
+$("#rm").onclick=()=>{img="";$("#f-img").value="";pv();toast("Cover removed. Save the book to keep this change.")};
+$("#f-img").onchange=e=>{const fi=e.target.files[0],er=$("#e-img");er.textContent="";if(!fi)return;
+if(!/^image\/(png|jpe?g|webp|gif)$/.test(fi.type)){er.textContent="Choose a PNG, JPEG, WebP or GIF image.";e.target.value="";return}
+if(fi.size>5e6){er.textContent="The image is larger than 5 MB. Choose a smaller file.";e.target.value="";return}
+const rd=new FileReader();rd.onerror=()=>{er.textContent="This file could not be read. Try another image."};
+rd.onload=()=>{const im=new Image();im.onerror=()=>{er.textContent="This image could not be opened. Try another file."};
+im.onload=()=>{const k=Math.min(1,360/im.height,240/im.width),c=document.createElement("canvas");c.width=Math.max(1,Math.round(im.width*k));c.height=Math.max(1,Math.round(im.height*k));c.getContext("2d").drawImage(im,0,0,c.width,c.height);img=c.toDataURL("image/jpeg",.82);pv();toast("Cover added. Save the book to keep it.")};im.src=rd.result};rd.readAsDataURL(fi)};
+$("#f-author").onchange=e=>{const m=bks().find(x=>x.author.toLowerCase()===e.target.value.trim().toLowerCase());if(m&&!$("#f-cc").value){$("#f-cc").value=m.cc;toast(`Country set to ${nm(m.cc)} from your other books by this author`)}};
+$("#fm").onsubmit=e=>{e.preventDefault();const v=k=>$("#f-"+k).value.trim(),er={};
+const t=v("title"),a=v("author"),tot=Number(v("total")),cu=v("cur")===""?0:Number(v("cur")),s=v("start"),en=v("end"),st=v("status");
+if(!t)er.title="Enter a title.";else if(bks().some(x=>x.id!==id&&x.title.toLowerCase()===t.toLowerCase()&&x.author.toLowerCase()===a.toLowerCase()))er.title="This book is already in your library.";
+if(!a)er.author="Enter an author.";if(!v("cc"))er.cc="Choose the author’s country.";
+if(!v("total")||!Number.isInteger(tot)||tot<1||tot>5000)er.total="Enter a whole number from 1 to 5000.";
+if(!Number.isInteger(cu)||cu<0||(!er.total&&cu>tot))er.cur=er.total?"Enter a whole page number.":`Current page cannot be higher than ${tot}.`;
+if(!!s!==!!en)er[s?"end":"start"]="Set both dates or leave both empty.";else if(s&&en<s)er.end="Target date must be on or after the start date.";
+["title","author","cc","total","cur","start","end"].forEach(k=>{$("#e-"+k).textContent=er[k]||"";$("#f-"+k).setAttribute("aria-invalid",!!er[k])});
+const first=Object.keys(er)[0];if(first){$("#f-"+first).focus();return toast("Please fix the highlighted fields.")}
+const o={title:t,author:a,cc:v("cc"),genre:v("genre"),status:st,cur:cu,total:tot,rating:Number(v("rating")),notes:v("notes"),start:s,end:en,img};
+if(st==="Completed")o.cur=tot;else if(cu>=tot)o.status="Completed";
+if(o.status==="Completed")o.fin=(id&&b.fin)||today();else o.fin="";
+if(id)Object.assign(b,o);else bks().push({...o,id:Math.max(0,...bks().map(x=>x.id))+1,sample:false,added:today(),log:[]});
+save();d.close();refresh();toast(id?`Updated “${t}”`:`Added “${t}”`)}}
+
+/* ---------- shell ---------- */
+const PG=[["overview","Overview","layout-dashboard",overview],["books","My Books","library",books],["progress","Reading Progress","trending-up",progress],["planner","Reading Planner","calendar-days",planner],["review","Backlog Review","history",review],["analysis","Backlog Analysis","chart-pie",analysis],["map","Global Reading Map","globe",mapPage],["settings","Settings","settings",settings]];
+function shell(){const n=due().length;$("#nav").innerHTML=PG.map(p=>`<a href="#${p[0]}"${p[0]===page?' aria-current="page"':""}><i data-lucide="${p[2]}"></i><span class="lbl">${p[1]}</span>${p[0]==="review"&&n?`<span class="nb" aria-label="${n} to review">${n}</span>`:""}</a>`).join("");
+$("#bc").hidden=!n;$("#bc").textContent=n;$("#bell").setAttribute("aria-label",`Notifications: ${n} backlog alert${n===1?"":"s"}`);$("#av").textContent=(S.name||"R")[0].toUpperCase();$("#un").textContent=S.name}
+function render(){const p=PG.find(x=>x[0]===page);if(wm&&page!=="map"){try{wm.destroy()}catch(e){}wm=null}$("#pt").textContent=p[1];document.title=p[1]+" – MyLibrary";$("#page").innerHTML=p[3]();shell();
+({books:bindBooks,progress:()=>{$$("[data-t]").forEach(x=>x.onclick=()=>{ptab=x.dataset.t;render()});$$("[data-e]").forEach(x=>x.onclick=()=>form(+x.dataset.e));pageInputs()},planner:()=>$$("[data-pl]").forEach(x=>x.onclick=()=>planForm(+x.dataset.pl)),review:reviewBind,map:mapBind,settings:settingsBind}[page]||(()=>{}))();ic()}
+const refresh=()=>render();
+function route(){const h=location.hash.slice(1);page=PG.some(p=>p[0]===h)?h:"overview";document.body.classList.remove("open");render();$("#main").focus({preventScroll:true});window.scrollTo(0,0)}
+$("#mt").onclick=()=>{const m=innerWidth<=860,c=document.body.classList.toggle(m?"open":"col");$("#mt").setAttribute("aria-expanded",m?c:!c)};
+$("#bd").onclick=()=>document.body.classList.remove("open");addEventListener("keydown",e=>{if(e.key==="Escape")document.body.classList.remove("open")});
+$("#gsf").onsubmit=e=>{e.preventDefault();if(page!=="books")location.hash="#books"};
+$("#gs").oninput=e=>{f.q=e.target.value;if(page!=="books")location.hash="#books";else{$("#q").value=f.q;bk()}};
+$("#bell").onclick=()=>{const d=$("#dlg"),r=due();d.innerHTML=`<h2 id="dt">Notifications</h2>${r.length?r.map(b=>`<div class="it">${cv(b,1)}<div><strong>${esc(b.title)}</strong><br><span class="hint">Unread for ${wait(b)} days, over your ${S.days}-day limit</span></div></div>`).join("")+`<p><a class="btn" href="#review" id="gr">Go to Backlog Review</a></p>`:`<p class="empty">No alerts. Your backlog is clear.</p>`}<p><button class="btn g" id="cn" type="button">Close</button></p>`;d.showModal();$("#cn").onclick=()=>d.close();if($("#gr"))$("#gr").onclick=()=>d.close()};
+/* ---------- login ---------- */
+const UK="mylibrary_users",SK="mylibrary_session";let amode="in",fails=0,lock=0;
+const getU=()=>{try{return JSON.parse(localStorage.getItem(UK))||[]}catch(e){return[]}},putU=a=>{try{localStorage.setItem(UK,JSON.stringify(a))}catch(e){}};
+const b64=a=>btoa(String.fromCharCode(...new Uint8Array(a))),unb=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function hashPw(pw,salt){const k=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveBits"]);return b64(await crypto.subtle.deriveBits({name:"PBKDF2",salt,iterations:100000,hash:"SHA-256"},k,256))}
+function setMode(m){amode=m;$$("[data-am]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.am===m));$("#nmw").hidden=$("#cfw").hidden=m==="in";$("#asb").textContent=m==="in"?"Log in":"Create account";$("#ap").autocomplete=m==="in"?"current-password":"new-password";["an","ae","ap","ac"].forEach(k=>{$("#e-"+k).textContent="";$("#"+k).setAttribute("aria-invalid","false")});$("#e-af").textContent="";$("#am").textContent=""}
+function start(u,rm){try{(rm?localStorage:sessionStorage).setItem(SK,u.id)}catch(e){}U=u;KEY="mylibrary_v3_"+u.id;
+try{if(u.email==="demo@mylibrary.app"&&!localStorage.getItem(KEY)){const o=localStorage.getItem("mylibrary_v3");if(o)localStorage.setItem(KEY,o)}}catch(e){}
+S=null;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!Array.isArray(S.books))S={books:SD.map(mk),days:90,name:u.name};S.books.forEach(b=>{if(b.cc==="TW")b.cc="CN"});
+f={q:"",st:"All",g:"All",so:"title",view:"grid"};sel=null;ptab="Unfinished";$("#gs").value="";$("#ap").value=$("#ac").value="";document.body.classList.add("in");try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}route();ic()}
+function logout(){try{localStorage.removeItem(SK);sessionStorage.removeItem(SK)}catch(e){}if(wm){try{wm.destroy()}catch(e){}wm=null}U=S=null;KEY="";if($("#dlg").open)$("#dlg").close();$("#page").innerHTML="";document.body.classList.remove("in");setMode("in");$("#ae").value="";$("#ap").value="";$("#am").textContent="You have been logged out.";$("#ae").focus()}
+$("#af").onsubmit=async e=>{e.preventDefault();const em=$("#ae").value.trim().toLowerCase(),pw=$("#ap").value,nv=$("#an").value.trim(),er={};
+if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))er.ae="Enter a valid email address.";if(!pw)er.ap="Enter your password.";
+if(amode==="up"){if(!nv)er.an="Enter your name.";if(pw&&(pw.length<8||!/[A-Za-z]/.test(pw)||!/\d/.test(pw)))er.ap="Use at least 8 characters, with a letter and a number.";if(pw&&pw!==$("#ac").value)er.ac="The passwords do not match."}
+["an","ae","ap","ac"].forEach(k=>{$("#e-"+k).textContent=er[k]||"";$("#"+k).setAttribute("aria-invalid",!!er[k])});$("#e-af").textContent="";$("#am").textContent="";
+const first=Object.keys(er)[0];if(first)return $("#"+first).focus();
+if(!window.crypto||!crypto.subtle)return $("#e-af").textContent="Secure sign-in is not available in this browser.";
+const us=getU(),rm=$("#arm").checked,sb=$("#asb");sb.disabled=true;
+try{if(amode==="up"){if(us.some(u=>u.email===em)){$("#e-ae").textContent="An account with this email already exists. Log in instead.";$("#ae").setAttribute("aria-invalid","true");$("#ae").focus();return}
+const salt=crypto.getRandomValues(new Uint8Array(16)),u={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),email:em,name:nv,salt:b64(salt),hash:await hashPw(pw,salt)};us.push(u);putU(us);start(u,rm);toast(`Welcome, ${u.name}. Your account is ready.`)}
+else{if(Date.now()<lock)return $("#e-af").textContent=`Too many attempts. Try again in ${Math.ceil((lock-Date.now())/1000)} seconds.`;
+const u=us.find(x=>x.email===em);if(u&&await hashPw(pw,unb(u.salt))===u.hash){fails=0;start(u,rm);toast(`Welcome back, ${u.name}`)}else{if(++fails>=5){lock=Date.now()+30000;fails=0}$("#e-af").textContent="Email or password is incorrect.";$("#ap").focus()}}}finally{sb.disabled=false}};
+$$("[data-am]").forEach(b=>b.onclick=()=>setMode(b.dataset.am));$("#lo").onclick=logout;
+$("#ash").onchange=e=>{$("#ap").type=$("#ac").type=e.target.checked?"text":"password"};
+$("#ad").onclick=()=>{setMode("in");$("#ae").value="demo@mylibrary.app";$("#ap").value="Demo1234";$("#af").requestSubmit()};
+addEventListener("hashchange",()=>{if(U)route()});
+(async()=>{try{if(window.crypto&&crypto.subtle){const us=getU();if(!us.some(u=>u.email==="demo@mylibrary.app")){const salt=crypto.getRandomValues(new Uint8Array(16));us.push({id:"demo",email:"demo@mylibrary.app",name:"Demo Reader",salt:b64(salt),hash:await hashPw("Demo1234",salt)});putU(us)}}}catch(e){}
+let id=null;try{id=localStorage.getItem(SK)||sessionStorage.getItem(SK)}catch(e){}const u=getU().find(x=>x.id===id);if(u)start(u,!!localStorage.getItem(SK));else{ic();$("#ae").focus()}})();
+</script></body></html>
